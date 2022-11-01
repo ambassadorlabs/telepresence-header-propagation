@@ -55,7 +55,7 @@ func extractHeaders(ctx context.Context, r *http.Request) context.Context {
 we want to propagate and add it to the context that is passed down through the call stack. In this case we are only grabbing
 the `X-Telepresence-Id` header but we could add any others that we care about, or even all of them.
 
-In `service.go` in the `InitialUppercase` function, we create a new HTTP client:
+To make the request to `/finaluppercase`, in `service.go`, in the `InitialUppercase` function, we create a new HTTP client:
 
 ```go
 client := httptransport.NewClient(
