@@ -40,12 +40,12 @@ endpoint `/finaluppercase`.
 ### How it's done: context.Context
 
 The most effective way to propagate headers in Go is through a `context`. `go-kit` provides some convenience methods for
-manipulating incoming and outgoing requests. At line 30 of `main.go`, we add `httptransport.ServerBefore(extractHeaders)`
-to the stack of function calls on an incoming request. `extractHeaders` is in `context_headers.go`:
+manipulating incoming and outgoing requests. At line 30 of [main.go](main.go), we add `httptransport.ServerBefore(extractHeaders)`
+to the stack of function calls on an incoming request. `extractHeaders` is in [context_headers.go`](context_headers.go):
 
 ```go
 func extractHeaders(ctx context.Context, r *http.Request) context.Context {
-	header := r.Header.Get("X-Telepresence-Id")
+	header := r.Header.Get("x-telepresence-id")
 	ctx = context.WithValue(ctx, "x-telepresence-id", header)
 	return ctx
 }
@@ -53,9 +53,9 @@ func extractHeaders(ctx context.Context, r *http.Request) context.Context {
 
 `ServerBefore` calls any functions passed to it before the request is passed further down the stack. So we get the header
 we want to propagate and add it to the context that is passed down through the call stack. In this case we are only grabbing
-the `X-Telepresence-Id` header but we could add any others that we care about, or even all of them.
+the `x-telepresence-id` header but we could add any others that we care about, or even all of them.
 
-To make the request to `/finaluppercase`, in `service.go`, in the `InitialUppercase` function, we create a new HTTP client:
+To make the request to `/finaluppercase`, in [service.go](service.go), in the `InitialUppercase` function, we create a new HTTP client:
 
 ```go
 client := httptransport.NewClient(
