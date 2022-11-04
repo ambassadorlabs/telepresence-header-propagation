@@ -22,7 +22,7 @@ func (mw logmw) InitialUppercase(ctx context.Context, s string) (output string, 
 	defer func(begin time.Time) {
 		_ = mw.logger.Log(
 			"method", "uppercase",
-			"telepresenceHeader", ctx.Value("x-telepresence-id").(string),
+			"telepresenceHeader", ctx.Value(telepresenceHeader).(string),
 		)
 	}(time.Now())
 
@@ -34,7 +34,7 @@ func (mw logmw) FinalUppercase(ctx context.Context, s string) (output string, er
 	defer func(begin time.Time) {
 		_ = mw.logger.Log(
 			"method", "finalUppercase",
-			"telepresenceHeader", ctx.Value("x-telepresence-id").(string),
+			"telepresenceHeader", ctx.Value(telepresenceHeader).(string),
 		)
 	}(time.Now())
 
