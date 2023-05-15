@@ -5,6 +5,14 @@
 * [Background](#background)
 * [The Challenge](#the-challenge)
 * [The Solution](#the-solution)
+  * [What is OpenTelemetry](#what-is-opentelemetry)
+  * [How OpenTelemetry Baggage Unlocks Telepresence for Teams](#how-opentelemetry-baggage-unlocks-telepresence-for-teams)
+    * [Baggage](#baggage)
+    * [Use with Telepresence](#use-with-telepresence)
+    * [Using OpenTelemetry Auto-Instrumentation](#using-opentelemetry-auto-instrumentation)
+* [Examples](#examples)
+  * [Auto-Instrumentation Packages](#auto-instrumentation-packages)
+  * [Operator for Kubernetes](#operator-for-kubernetes)
 
 ## Background
 
