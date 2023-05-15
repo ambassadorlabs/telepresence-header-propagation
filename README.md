@@ -48,7 +48,7 @@ to reach any services further upstream, the first service must _propagate_ it, b
 from the request and storing it somewhere or passing it down the function call chain to be retrieved
 by any functions that make a network call to the upstream service.
 
-![Diagram of a request losing the header when sent to the next upstream service unless propagated](./images/header_requires_propagation.png)
+![Diagram of a request losing the header when sent to the next upstream service unless propagated](./images/header_requires_propagating.png)
 
 Depending on the programming language the services are written in and environment of the services, this has
 historically represented a Herculean task, requiring manually updating the code along every function call path
