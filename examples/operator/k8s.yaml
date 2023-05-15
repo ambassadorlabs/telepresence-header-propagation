@@ -1,0 +1,92 @@
+# Provides an Instrumentation that will read the annotations
+# on Deployment objects below
+# https://opentelemetry.io/docs/k8s-operator/automatic/
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: uppercase-instrumentation
+spec:
+  exporter:
+    endpoint: http://demo-collector:4317
+  propagators:
+    - tracecontext
+    - baggage
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uppercase-node
+  labels:
+    app: uppercase-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uppercase-node
+  template:
+    metadata:
+      labels:
+        app: uppercase-node
+      annotations:
+        "instrumentation.opentelemetry.io/inject-nodejs": "true"
+    spec:
+      containers:
+        - name: uppercase
+          image: thedevelopnik/tp-headers-operator-node:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: FINALUPPER_ADDR
+              value: finalupper-java.default:8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uppercase-node
+spec:
+  selector:
+    app: uppercase-node
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finalupper-java
+  labels:
+    app: finalupper-java
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finalupper-java
+  template:
+    metadata:
+      labels:
+        app: finalupper-java
+      annotations:
+        "instrumentation.opentelemetry.io/inject-java": "true"
+    spec:
+      containers:
+        - name: finalupper
+          image: thedevelopnik/tp-headers-operator-java:1.0
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finalupper-java
+spec:
+  selector:
+    app: finalupper-java
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8081
