@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uppercase-ruby
+  labels:
+    app: uppercase-ruby
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uppercase-ruby
+  template:
+    metadata:
+      labels:
+        app: uppercase-ruby
+    spec:
+      containers:
+        - name: uppercase
+          image: thedevelopnik/tp-headers-instrumentation-ruby:1.1
+          ports:
+            - containerPort: 4567
+          env:
+            - name: FINALUPPER_ADDR
+              value: http://finalupper-go.default:8080
+            - name: OTEL_TRACES_EXPORTER
+              value: console
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uppercase-ruby
+spec:
+  selector:
+    app: uppercase-ruby
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 4567
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finalupper-go
+  labels:
+    app: finalupper-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finalupper-go
+  template:
+    metadata:
+      labels:
+        app: finalupper-go
+    spec:
+      containers:
+        - name: finalupper
+          image: thedevelopnik/tp-headers-instrumentation-go:1.0
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finalupper-go
+spec:
+  selector:
+    app: finalupper-go
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
